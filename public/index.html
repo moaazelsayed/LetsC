@@ -70,6 +70,7 @@
 			</section>
 
 		<!-- Scripts -->
+			<script src="MobileServices.Web.min.js"></script>
 			<script src="assets/js/jquery.min.js"></script>
 			<script src="assets/js/jquery.scrolly.min.js"></script>
 			<script src="assets/js/skel.min.js"></script>
@@ -89,36 +90,26 @@
 					//console.log(fileURL);
 					$(function() {
 
-						$.ajax({
-							url: "https://api.projectoxford.ai/emotion/v1.0/recognize",
-							beforeSend: function(xhrObj){
-					        // Request headers
-					        //xhrObj.setRequestHeader('Access-Control-Allow-Origin', '*');
-					        xhrObj.setRequestHeader("Content-Type","application/octet-stream");
-					        xhrObj.setRequestHeader("Ocp-Apim-Subscription-Key","daea74e6fa7a4b6e98ffff7996d26e73");
-					    },
-					    type: "POST",
-					      // Request body
-					      data: file,
-					      processData: false
-					      
-					  })
+				        var params = {
+				            // Request parameters
+				            "visualFeatures": "Categories"
+				        };
+							//comp vision -> 53641e16af0d44688493fae9468066ed
+							//voice -> e555aba4e01e48959af55b9b2deab2a6
+
+				        $.ajax({
+				            url: "https://api.projectoxford.ai/vision/v1.0/analyze?" + $.param(params),
+				            beforeSend: function(xhrObj){
+				                // Request headers
+				                xhrObj.setRequestHeader("Content-Type","application/octet-stream");
+				                xhrObj.setRequestHeader("Ocp-Apim-Subscription-Key","53641e16af0d44688493fae9468066ed");
+				            },
+				            type: "POST",
+				            // Request body
+				            data: file,
+				        })	
 						.done(function(data) {
-							if (data[0].scores.surprise >= 0.5){
-								alert("You rated a 5/5  Stars!");
-							}
-							if (data[0].scores.happiness >= 0.5){
-								alert("You rated a 4.5/5  Stars!");
-							}
-							if (data[0].scores.neutral >= 0.5){
-								alert("You rated a 3/5 Stars!");
-							}
-							if (data[0].scores.sadness >= 0.5){
-								alert("You rated a 2.5/5 Stars!");
-							}
-							if (data[0].scores.anger >= 0.5){
-								alert("You rated a 1/5 Star!");
-							}
+							console.log(data);
 						})
 						.fail(function() {
 							console.log("Error");
