@@ -1,19 +1,27 @@
 <!DOCTYPE HTML>
-<!--
-	Photon by HTML5 UP
-	html5up.net | @ajlkn
-	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
--->
+
 <html>
 	<head>
 		<title>LetsC</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 		<!--<meta http-equiv="Content-Security-Policy" content="default-src 'self'">-->
 		<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
 		<link rel="stylesheet" href="assets/css/main.css" />
 		<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
 		<!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
+
+		<!-- Scripts -->
+		<script src="speak/speakClient.js"></script>
+		<!--<script src="MobileServices.Web.min.js"></script>-->
+		<script src="assets/js/jquery.min.js"></script>
+		<script src="assets/js/jquery.scrolly.min.js"></script>
+		<script src="assets/js/skel.min.js"></script>
+		<script src="assets/js/util.js"></script>
+		<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
+		<script src="assets/js/main.js"></script>
+
 	</head>
 	<body>
 
@@ -51,7 +59,9 @@
 
 						<div class="6u$ 12u$(medium) important(medium)">
 							<span class="image fit">
+								<button onclick="speak('hello world')">Talk</button>
 								<img id="frame" class="img-rounded">
+								<div id="audio"></div>
 							</span>
 						</div>
 
@@ -59,65 +69,72 @@
 				</div>
 			</section>
 
-		<!-- Footer -->
-			<section id="footer">
-				<ul class="icons">
-					<li><a href="#" class="icon alt fa-twitter"><span class="label">Twitter</span></a></li>
-					<li><a href="#" class="icon alt fa-facebook"><span class="label">Facebook</span></a></li>
-					<li><a href="#" class="icon alt fa-instagram"><span class="label">Instagram</span></a></li>
-					<li><a href="#" class="icon alt fa-github"><span class="label">GitHub</span></a></li>
-					<li><a href="#" class="icon alt fa-envelope"><span class="label">Email</span></a></li>
-				</ul>
-			</section>
+			<script type="text/javascript">
+				var camera = document.getElementById('camera');
+				var frame = document.getElementById('frame');
+				var audio = document.getElementById('audio');
 
-		<!-- Scripts -->
-			<script src="MobileServices.Web.min.js"></script>
-			<script src="assets/js/jquery.min.js"></script>
-			<script src="assets/js/jquery.scrolly.min.js"></script>
-			<script src="assets/js/skel.min.js"></script>
-			<script src="assets/js/util.js"></script>
-			<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
-			<script src="assets/js/main.js"></script>
+				camera.addEventListener('change', function(e) {
+					var file = e.target.files[0]; 
+					// Do something with the file.
+					var fileURL = URL.createObjectURL(file);
+					frame.src = fileURL;
+					//console.log(fileURL);
+					$(function() {
+				        var params = {
+				            // Request parameters
+				            "maxCandidates": "1",
 
-			// <script type="text/javascript">
-			// 	var camera = document.getElementById('camera');
-			// 	var frame = document.getElementById('frame');
+				        };
+				      
+				        $.ajax({
+				            url: "https://api.projectoxford.ai/vision/v1.0/describe?" + $.param(params),
+				            beforeSend: function(xhrObj){
+				                // Request headers
+				                //xhrObj.setRequestHeader("Content-Type","application/json");
+				                //xhrObj.setRequestHeader('Access-Control-Allow-Origin', '*');
+                				xhrObj.setRequestHeader("Content-Type","application/octet-stream");
+				                xhrObj.setRequestHeader("Ocp-Apim-Subscription-Key","53641e16af0d44688493fae9468066ed");
+				            },
+				            type: "POST",
+				            // Request body
+				            data: file,
+				            processData: false
+				        })
+				        .done(function(data) {
+				        	speak('hello world!')
+				            console.log(data.description.captions[0].text);
+				            speak(data.description.captions[0].text);
+				            audio.innerHTML = '<div id="audio"></div>'
+				         //    $.ajax({
+				         //    url: "https://speech.platform.bing.com/synthesize?",
+				         //    beforeSend: function(xhrObj){
+				         //        // Request headers
+				         //        //xhrObj.setRequestHeader("Content-Type","application/json");
+				         //        //xhrObj.setRequestHeader('Access-Control-Allow-Origin', '*');
+             //    				xhrObj.setRequestHeader("Content-Type","application/octet-stream");
+				         //        xhrObj.setRequestHeader("Ocp-Apim-Subscription-Key","e555aba4e01e48959af55b9b2deab2a6");
+				         //    },
+				         //    type: "POST",
+				         //    // Request body
+				         //    data: data.description.captions[0].text,
+				         //    processData: false
+				        	// })
+				        	// .done(function(audio){
 
-			// 	camera.addEventListener('change', function(e) {
-			// 		var file = e.target.files[0]; 
-			// 		// Do something with the file.
-			// 		var fileURL = URL.createObjectURL(file);
-			// 		frame.src = fileURL;
-			// 		//console.log(fileURL);
-			// 		$(function() {
+				        	// })
+				        	// .fail(function(){
+				        	// 	console.log("error!");
+				        	// })
+				        })
+				        .fail(function() {
+				            console.log("Error");
+				        });
+				    });
+				});
+			
+			</script>
 
-			// 	        var params = {
-			// 	            // Request parameters
-			// 	            "visualFeatures": "Categories"
-			// 	        };
-			// 				//comp vision -> 53641e16af0d44688493fae9468066ed
-			// 				//voice -> e555aba4e01e48959af55b9b2deab2a6
-
-			// 	        $.ajax({
-			// 	            url: "https://api.projectoxford.ai/vision/v1.0/analyze?" + $.param(params),
-			// 	            beforeSend: function(xhrObj){
-			// 	                // Request headers
-			// 	                xhrObj.setRequestHeader("Content-Type","application/octet-stream");
-			// 	                xhrObj.setRequestHeader("Ocp-Apim-Subscription-Key","53641e16af0d44688493fae9468066ed");
-			// 	            },
-			// 	            type: "POST",
-			// 	            // Request body
-			// 	            data: file,
-			// 	        })	
-			// 			.done(function(data) {
-			// 				console.log(data);
-			// 			})
-			// 			.fail(function() {
-			// 				console.log("Error");
-			// 			});
-			// 		});
-			// 	});
-			// </script>
-
+			<speak version='1.0' xml:lang='en-US'><voice xml:lang='en-US' xml:gender='Female' name='Microsoft Server Speech Text to Speech Voice (en-US, ZiraRUS)'>Microsoft Bing Voice Output API</voice></speak>
 	</body>
 </html>
