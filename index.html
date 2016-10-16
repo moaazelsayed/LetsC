@@ -93,6 +93,10 @@
 
 				camera.addEventListener('change', function(e) {
 					var file = e.target.files[0]; 
+					if(typeof window.orientation !== 'undefined'){
+						file = imagerotate(file, 180, 0);
+					}
+
 					// Do something with the file.
 					var fileURL = URL.createObjectURL(file);
 					frame.src = fileURL;
