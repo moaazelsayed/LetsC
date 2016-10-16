@@ -9,14 +9,13 @@
 		<!--<meta http-equiv="Content-Security-Policy" content="default-src 'self'">-->
 		<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
 		<link rel="stylesheet" href="assets/css/main.css" />
-		<!--<script src="https://raw.githubusercontent.com/ranacseruet/webspeech/master/build/webspeech.min.js"></script>-->
-		<script src="speak2/node_modules/platform/platform.js"></script>
-		<script src="speak2/src/webspeech.js"></script>
+
 		<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
 		<!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
 
 		<!-- Scripts -->
-		<script src="speak/speakClient.js"></script>
+		<script src="speak/node_modules/platform/platform.js"></script>
+		<script src="speak/src/webspeech.js"></script>
 		<!--<script src="MobileServices.Web.min.js"></script>-->
 		<script src="assets/js/jquery.min.js"></script>
 		<script src="assets/js/jquery.scrolly.min.js"></script>
@@ -62,20 +61,35 @@
 
 						<div class="6u$ 12u$(medium) important(medium)">
 							<span class="image fit">
-								
 								<img id="frame" class="img-rounded">
-								<div id="audio"></div>
+								<h2 id="frameLabel"></h2>
 							</span>
 						</div>
 
 					</div>
 				</div>
 			</section>
-
+			<script type="text/javascript">
+				var listener = new webspeech.Listener();
+				var triggerText = "let's see what's in front of me";
+				var camera = document.getElementById('camera');
+				//jQuery.noConflict();
+			    $(function() {
+			        listener.listen("en", function(text) {
+			        	
+			            if (triggerText.indexOf(text) !== -1){
+			            	var speaker = new webspeech.Speaker();
+    						speaker.speak("en", "let me check!");
+			            	camera.focus();
+			            	camera.click();
+			            }
+			        });
+			    })
+			</script>
 			<script type="text/javascript">
 				var camera = document.getElementById('camera');
 				var frame = document.getElementById('frame');
-				var audio = document.getElementById('audio');
+				var frameLabel = document.getElementById('frameLabel');
 
 				camera.addEventListener('change', function(e) {
 					var file = e.target.files[0]; 
@@ -87,7 +101,6 @@
 				        var params = {
 				            // Request parameters
 				            "maxCandidates": "1",
-
 				        };
 				      
 				        $.ajax({
@@ -105,33 +118,9 @@
 				            processData: false
 				        })
 				        .done(function(data) {
-				        	//speak('hello world!')
 				        	var speaker = new webspeech.Speaker();
     						speaker.speak("en", data.description.captions[0].text);
-
-				            console.log(data.description.captions[0].text);
-				            //speak(data.description.captions[0].text);
-
-				         //    $.ajax({
-				         //    url: "https://speech.platform.bing.com/synthesize?",
-				         //    beforeSend: function(xhrObj){
-				         //        // Request headers
-				         //        //xhrObj.setRequestHeader("Content-Type","application/json");
-				         //        //xhrObj.setRequestHeader('Access-Control-Allow-Origin', '*');
-             //    				xhrObj.setRequestHeader("Content-Type","application/octet-stream");
-				         //        xhrObj.setRequestHeader("Ocp-Apim-Subscription-Key","e555aba4e01e48959af55b9b2deab2a6");
-				         //    },
-				         //    type: "POST",
-				         //    // Request body
-				         //    data: data.description.captions[0].text,
-				         //    processData: false
-				        	// })
-				        	// .done(function(audio){
-
-				        	// })
-				        	// .fail(function(){
-				        	// 	console.log("error!");
-				        	// })
+    						frameLabel.innerHTML = data.description.captions[0].text;
 				        })
 				        .fail(function() {
 				            console.log("Error");
