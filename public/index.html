@@ -79,45 +79,45 @@
 			<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
 			<script src="assets/js/main.js"></script>
 
-			<script type="text/javascript">
-				var camera = document.getElementById('camera');
-				var frame = document.getElementById('frame');
+			// <script type="text/javascript">
+			// 	var camera = document.getElementById('camera');
+			// 	var frame = document.getElementById('frame');
 
-				camera.addEventListener('change', function(e) {
-					var file = e.target.files[0]; 
-					// Do something with the file.
-					var fileURL = URL.createObjectURL(file);
-					frame.src = fileURL;
-					//console.log(fileURL);
-					$(function() {
+			// 	camera.addEventListener('change', function(e) {
+			// 		var file = e.target.files[0]; 
+			// 		// Do something with the file.
+			// 		var fileURL = URL.createObjectURL(file);
+			// 		frame.src = fileURL;
+			// 		//console.log(fileURL);
+			// 		$(function() {
 
-				        var params = {
-				            // Request parameters
-				            "visualFeatures": "Categories"
-				        };
-							//comp vision -> 53641e16af0d44688493fae9468066ed
-							//voice -> e555aba4e01e48959af55b9b2deab2a6
+			// 	        var params = {
+			// 	            // Request parameters
+			// 	            "visualFeatures": "Categories"
+			// 	        };
+			// 				//comp vision -> 53641e16af0d44688493fae9468066ed
+			// 				//voice -> e555aba4e01e48959af55b9b2deab2a6
 
-				        $.ajax({
-				            url: "https://api.projectoxford.ai/vision/v1.0/analyze?" + $.param(params),
-				            beforeSend: function(xhrObj){
-				                // Request headers
-				                xhrObj.setRequestHeader("Content-Type","application/octet-stream");
-				                xhrObj.setRequestHeader("Ocp-Apim-Subscription-Key","53641e16af0d44688493fae9468066ed");
-				            },
-				            type: "POST",
-				            // Request body
-				            data: file,
-				        })	
-						.done(function(data) {
-							console.log(data);
-						})
-						.fail(function() {
-							console.log("Error");
-						});
-					});
-				});
-			</script>
+			// 	        $.ajax({
+			// 	            url: "https://api.projectoxford.ai/vision/v1.0/analyze?" + $.param(params),
+			// 	            beforeSend: function(xhrObj){
+			// 	                // Request headers
+			// 	                xhrObj.setRequestHeader("Content-Type","application/octet-stream");
+			// 	                xhrObj.setRequestHeader("Ocp-Apim-Subscription-Key","53641e16af0d44688493fae9468066ed");
+			// 	            },
+			// 	            type: "POST",
+			// 	            // Request body
+			// 	            data: file,
+			// 	        })	
+			// 			.done(function(data) {
+			// 				console.log(data);
+			// 			})
+			// 			.fail(function() {
+			// 				console.log("Error");
+			// 			});
+			// 		});
+			// 	});
+			// </script>
 
 	</body>
 </html>
