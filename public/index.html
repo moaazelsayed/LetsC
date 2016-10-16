@@ -9,6 +9,9 @@
 		<!--<meta http-equiv="Content-Security-Policy" content="default-src 'self'">-->
 		<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
 		<link rel="stylesheet" href="assets/css/main.css" />
+		<!--<script src="https://raw.githubusercontent.com/ranacseruet/webspeech/master/build/webspeech.min.js"></script>-->
+		<script src="speak2/node_modules/platform/platform.js"></script>
+		<script src="speak2/src/webspeech.js"></script>
 		<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
 		<!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
 
@@ -59,7 +62,7 @@
 
 						<div class="6u$ 12u$(medium) important(medium)">
 							<span class="image fit">
-								<button onclick="speak('hello world')">Talk</button>
+								
 								<img id="frame" class="img-rounded">
 								<div id="audio"></div>
 							</span>
@@ -102,10 +105,13 @@
 				            processData: false
 				        })
 				        .done(function(data) {
-				        	speak('hello world!')
+				        	//speak('hello world!')
+				        	var speaker = new webspeech.Speaker();
+    						speaker.speak("en", data.description.captions[0].text);
+
 				            console.log(data.description.captions[0].text);
-				            speak(data.description.captions[0].text);
-				            audio.innerHTML = '<div id="audio"></div>'
+				            //speak(data.description.captions[0].text);
+
 				         //    $.ajax({
 				         //    url: "https://speech.platform.bing.com/synthesize?",
 				         //    beforeSend: function(xhrObj){
@@ -134,7 +140,5 @@
 				});
 			
 			</script>
-
-			<speak version='1.0' xml:lang='en-US'><voice xml:lang='en-US' xml:gender='Female' name='Microsoft Server Speech Text to Speech Voice (en-US, ZiraRUS)'>Microsoft Bing Voice Output API</voice></speak>
 	</body>
 </html>
